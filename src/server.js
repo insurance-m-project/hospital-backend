@@ -5,7 +5,6 @@ const cors = require('cors');
 const Web3 = require('web3');
 const web3 = new Web3(new Web3.providers.HttpProvider(process.env.ETHEREUM_NODE_URL));
 const MedicalRecord = require('../src/contracts/MedicalRecord.json');
-
 // cors 설정
 app.use(
     cors({
