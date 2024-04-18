@@ -5,6 +5,7 @@ const cors = require('cors');
 const Web3 = require('web3');
 const web3 = new Web3(new Web3.providers.HttpProvider(process.env.ETHEREUM_NODE_URL));
 const MedicalRecord = require('../src/contracts/MedicalRecord.json');
+const MedicalLogging = require('../src/contracts/MedicalLogging.json');
 // cors 설정
 app.use(
     cors({
@@ -17,7 +18,10 @@ app.use(
 app.use(express.json());
 app.use(express.urlencoded( {extended : false } ));
 
-app.post('/api/transaction', async (req, res) => {
+/**
+ * return hospital ca object
+ */
+app.post('/api/hospital', async (req, res) => {
     const requestData = req.body;
     const from = requestData.from;
 
@@ -26,8 +30,8 @@ app.post('/api/transaction', async (req, res) => {
     const CA = MedicalRecord.networks[networkId].address;
     const abi = MedicalRecord.abi;
 
-    const deployed = new web3.eth.Contract(abi, CA);
-    const data = await deployed.methods.addMedicalRecord(
+    const medicalDeployed = new web3.eth.Contract(abi, CA);
+    const data = await medicalDeployed.methods.addMedicalRecord(
         requestData.name,
         requestData.RRN,
         requestData.KCD,
@@ -48,6 +52,35 @@ app.post('/api/transaction', async (req, res) => {
             treatment.foop,
             treatment.nonReimbursement
         ])).encodeABI();
+
+
+    let txObject = {
+        nonce,
+        from,
+        to: CA,
+        data,
+    };
+
+    res.json(txObject);
+});
+
+/**
+ * return logging ca object
+ */
+app.post('/api/logging', async (req, res) => {
+    const requestData = req.body;
+    const from = requestData.from;
+
+    const nonce = await web3.eth.getTransactionCount(from);
+    const networkId = await web3.eth.net.getId();
+    const CA = MedicalLogging.networks[networkId].address;
+    const abi = MedicalLogging.abi;
+
+    const loggingDeployed = new web3.eth.Contract(abi, CA);
+    const data = await loggingDeployed.methods.addHospitalRecord(
+        requestData.transactionHash,
+        requestData.date
+        ).encodeABI();
 
 
     let txObject = {
