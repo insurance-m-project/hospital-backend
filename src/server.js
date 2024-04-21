@@ -3,7 +3,7 @@ const express = require('express');
 const app = express();
 const cors = require('cors');
 const Web3 = require('web3');
-const web3 = new Web3(new Web3.providers.HttpProvider(process.env.ETHEREUM_NODE_URL));
+const web3 = new Web3(new Web3.providers.HttpProvider(process.env.REACT_APP_ETHEREUM_NODE_URL));
 const MedicalRecord = require('../src/contracts/MedicalRecord.json');
 const MedicalLogging = require('../src/contracts/MedicalLogging.json');
 // cors 설정
@@ -89,7 +89,7 @@ app.post('/api/logging', async (req, res) => {
         to: CA,
         data,
     };
-
+    console.log(txObject);
     res.json(txObject);
 });
 
