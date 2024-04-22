@@ -30,7 +30,6 @@ jobs:
           port: 22
           key: ${{ secrets.PRIVATE_KEY }}
           script: |
-            docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
-            sudo docker pull ${{ secrets.DOCKER_USERNAME }}/hospital
-            sudo docker run -d -p 3000:3000 ${{ secrets.DOCKER_USERNAME }}/hospital
-            sudo docker image prune -f
+            docker pull ${{ secrets.DOCKER_USERNAME }}/hospital
+            docker run -d -p 3000:3000 ${{ secrets.DOCKER_USERNAME }}/hospital
+            docker image prune -f
