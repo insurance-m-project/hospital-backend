@@ -1,9 +1,9 @@
 FROM node:21.4.0
 
-WORKDIR /app
-COPY package*.json /app/
+WORKDIR /
+COPY package*.json /
 RUN npm install
-COPY . /app
+COPY . /
 EXPOSE 4000
 
-CMD ["node", "src/server.js "]
+CMD ["npm", "start"]
