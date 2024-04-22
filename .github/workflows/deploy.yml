@@ -30,7 +30,6 @@ jobs:
           port: 22
           key: ${{ secrets.PRIVATE_KEY }}
           script: |
-            sudo docker rm -f $$(docker ps --filter name=hospital -a -q)
             sudo docker pull ${{ secrets.DOCKER_USERNAME }}/hospital
             sudo docker run -d -p 3000:3000 ${{ secrets.DOCKER_USERNAME }}/hospital
             sudo docker image prune -f
