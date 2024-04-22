@@ -30,6 +30,9 @@ jobs:
           port: 22
           key: ${{ secrets.PRIVATE_KEY }}
           script: |
+            docker stop ${{ secrets.DOCKER_USERNAME }}/hospital
+            docker rm ${{ secrets.DOCKER_USERNAME }}/hospital
+            docker rmi ${{ secrets.DOCKER_USERNAME }}/hospital
             docker pull ${{ secrets.DOCKER_USERNAME }}/hospital
-            docker run -d -p 3000:3000 ${{ secrets.DOCKER_USERNAME }}/hospital
+            docker run -d -p 4000:4000 ${{ secrets.DOCKER_USERNAME }}/hospital
             docker image prune -f
