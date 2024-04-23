@@ -30,7 +30,14 @@ jobs:
           port: 22
           key: ${{ secrets.PRIVATE_KEY }}
           script: |
-            docker rm -f $(docker ps --filter name=hospital -a -q)
+
+            if docker ps -a | grep -q hospital; then
+              docker stop hospital
+              docker rm hospital
+              docker rmi ${{ secrets.DOCKER_USERNAME }}/hospital
+            fi
+            if docker images -a | grep -q ${{ secrets.DOCKER_USERNAME }}/hospital; then
+              docker rmi -f ${{ secrets.DOCKER_USERNAME }}/hospital
+            fi
             docker pull ${{ secrets.DOCKER_USERNAME }}/hospital
-            docker run -d -p 4000:4000 ${{ secrets.DOCKER_USERNAME }}/hospital
-            docker image prune -f
+            docker run -d -p 4000:4000 --name hospital ${{ secrets.DOCKER_USERNAME }}/hospital
